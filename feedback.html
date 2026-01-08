@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Feedback Counter - Lakshadweep</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #f0fdfa 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #0d9488, #14b8a6);
+            color: white;
+        }
+
+        .rating-bar {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .rating-fill {
+            background: linear-gradient(90deg, #fbbf24, #f59e0b);
+            height: 100%;
+            transition: width 1s ease;
+        }
+
+        @keyframes countUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-count {
+            animation: countUp 0.8s ease-out;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <div class="inline-block px-6 py-2 bg-teal-100 text-teal-800 rounded-full text-sm font-semibold mb-4">
+                <i class="fas fa-chart-line mr-2"></i>Live Dashboard
+            </div>
+            <h1 class="text-4xl md:text-6xl font-bold text-teal-800 mb-4">Lakshadweep Feedback Counter</h1>
+            <p class="text-xl text-slate-600 max-w-2xl mx-auto">
+                Real-time insights from visitor experiences at the Coral Paradise
+            </p>
+            <div class="mt-6">
+                <a href="feedback.html" class="btn-primary inline-block px-6 py-3 rounded-lg font-semibold">
+                    <i class="fas fa-plus mr-2"></i>Submit Your Feedback
+                </a>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div class="stat-card rounded-2xl p-6 text-center animate-count">
+                <div class="text-4xl font-bold mb-2" id="totalFeedback">0</div>
+                <div class="text-lg opacity-90">Total Feedback</div>
+                <i class="fas fa-comments text-2xl mt-2 opacity-75"></i>
+            </div>
+            <div class="stat-card rounded-2xl p-6 text-center animate-count">
+                <div class="text-4xl font-bold mb-2" id="avgRating">0.0</div>
+                <div class="text-lg opacity-90">Average Rating</div>
+                <div class="flex justify-center mt-2">
+                    <i class="fas fa-star text-yellow-300 text-xl"></i>
+                </div>
+            </div>
+            <div class="stat-card rounded-2xl p-6 text-center animate-count">
+                <div class="text-4xl font-bold mb-2" id="thisMonth">0</div>
+                <div class="text-lg opacity-90">This Month</div>
+                <i class="fas fa-calendar-alt text-2xl mt-2 opacity-75"></i>
+            </div>
+            <div class="stat-card rounded-2xl p-6 text-center animate-count">
+                <div class="text-4xl font-bold mb-2" id="satisfaction">0%</div>
+                <div class="text-lg opacity-90">Satisfaction</div>
+                <i class="fas fa-smile text-2xl mt-2 opacity-75"></i>
+            </div>
+        </div>
+
+        <!-- Rating Distribution -->
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <div class="glass-card rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-teal-800 mb-6 flex items-center">
+                    <i class="fas fa-chart-bar mr-3 text-teal-600"></i>Rating Distribution
+                </h2>
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700">5 Stars</span>
+                        <div class="flex items-center space-x-3">
+                            <div class="rating-bar w-32 h-3">
+                                <div class="rating-fill" id="rating5-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-600 w-8 text-right" id="rating5-count">0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700">4 Stars</span>
+                        <div class="flex items-center space-x-3">
+                            <div class="rating-bar w-32 h-3">
+                                <div class="rating-fill" id="rating4-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-600 w-8 text-right" id="rating4-count">0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700">3 Stars</span>
+                        <div class="flex items-center space-x-3">
+                            <div class="rating-bar w-32 h-3">
+                                <div class="rating-fill" id="rating3-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-600 w-8 text-right" id="rating3-count">0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700">2 Stars</span>
+                        <div class="flex items-center space-x-3">
+                            <div class="rating-bar w-32 h-3">
+                                <div class="rating-fill" id="rating2-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-600 w-8 text-right" id="rating2-count">0</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="text-slate-700">1 Star</span>
+                        <div class="flex items-center space-x-3">
+                            <div class="rating-bar w-32 h-3">
+                                <div class="rating-fill" id="rating1-bar" style="width: 0%"></div>
+                            </div>
+                            <span class="text-sm font-semibold text-slate-600 w-8 text-right" id="rating1-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Comments -->
+            <div class="glass-card rounded-2xl p-8">
+                <h2 class="text-2xl font-bold text-teal-800 mb-6 flex items-center">
+                    <i class="fas fa-quote-left mr-3 text-teal-600"></i>Recent Comments
+                </h2>
+                <div id="recentComments" class="space-y-4 max-h-80 overflow-y-auto">
+                    <div class="text-center text-slate-500 py-8">
+                        <i class="fas fa-comments text-3xl mb-2 opacity-50"></i>
+                        <p>No feedback yet. Be the first to share your experience!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Themes -->
+        <div class="glass-card rounded-2xl p-8 mb-12">
+            <h2 class="text-2xl font-bold text-teal-800 mb-6 flex items-center">
+                <i class="fas fa-lightbulb mr-3 text-teal-600"></i>Top Themes from Feedback
+            </h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-water text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-teal-800 mb-2">Crystal Clear Waters</h3>
+                    <p class="text-sm text-slate-600">Most visitors praise the pristine beaches and snorkeling experiences</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-utensils text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-teal-800 mb-2">Local Cuisine</h3>
+                    <p class="text-sm text-slate-600">Fresh seafood and traditional dishes are frequently mentioned</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <i class="fas fa-users text-teal-600 text-2xl"></i>
+                    </div>
+                    <h3 class="font-semibold text-teal-800 mb-2">Warm Hospitality</h3>
+                    <p class="text-sm text-slate-600">The friendly locals and welcoming atmosphere stand out</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="text-center text-slate-500">
+            <p>© 2026 Lakshadweep Tourism. Preserving Paradise Through Visitor Feedback.</p>
+        </div>
+    </div>
+
+    <script>
+        // Load and display feedback data
+        function loadFeedbackData() {
+            const feedbacks = JSON.parse(localStorage.getItem('lakshadweepFeedbacks') || '[]');
+            
+            // Calculate stats
+            const total = feedbacks.length;
+            const avgRating = total > 0 ? (feedbacks.reduce((sum, f) => sum + f.rating, 0) / total).toFixed(1) : '0.0';
+            
+            // This month's feedback
+            const now = new Date();
+            const thisMonth = feedbacks.filter(f => {
+                const feedbackDate = new Date(f.timestamp);
+                return feedbackDate.getMonth() === now.getMonth() && feedbackDate.getFullYear() === now.getFullYear();
+            }).length;
+            
+            // Satisfaction (4-5 stars)
+            const satisfied = feedbacks.filter(f => f.rating >= 4).length;
+            const satisfactionPercent = total > 0 ? Math.round((satisfied / total) * 100) : 0;
+            
+            // Update stats
+            document.getElementById('totalFeedback').textContent = total;
+            document.getElementById('avgRating').textContent = avgRating;
+            document.getElementById('thisMonth').textContent = thisMonth;
+            document.getElementById('satisfaction').textContent = satisfactionPercent + '%';
+            
+            // Rating distribution
+            const ratingCounts = [0, 0, 0, 0, 0, 0]; // index 1-5
+            feedbacks.forEach(f => {
+                ratingCounts[f.rating]++;
+            });
+            
+            for (let i = 1; i <= 5; i++) {
+                const count = ratingCounts[i];
+                const percentage = total > 0 ? (count / total) * 100 : 0;
+                document.getElementById(`rating${i}-count`).textContent = count;
+                document.getElementById(`rating${i}-bar`).style.width = percentage + '%';
+            }
+            
+            // Recent comments
+            const recentCommentsDiv = document.getElementById('recentComments');
+            if (feedbacks.length > 0) {
+                recentCommentsDiv.innerHTML = feedbacks.slice(0, 5).map(feedback => `
+                    <div class="border-l-4 border-teal-500 pl-4 py-3">
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="font-semibold text-teal-800">${feedback.name}</span>
+                            <div class="flex text-yellow-400 text-sm">
+                                ${'<i class="fas fa-star"></i>'.repeat(feedback.rating)}
+                            </div>
+                        </div>
+                        <p class="text-slate-600 text-sm italic">"${feedback.enjoyment}"</p>
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadFeedbackData);
+        
+        // Refresh data every 30 seconds
+        setInterval(loadFeedbackData, 30000);
+    </script>
+
+</body>
+</html>
